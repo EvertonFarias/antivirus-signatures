@@ -10,6 +10,14 @@ O workflow `.github/workflows/update.yml` roda todo dia: busca hashes novos no
 sem hashes novos: o app usa a data de `#version=` para avisar quando a base passa de 7 dias
 (sinal de que as atualizações estão sendo bloqueadas).
 
+## Fontes e créditos
+
+- **MalwareBazaar** (abuse.ch): hashes SHA-256 de APKs maliciosos.
+- **Echap stalkerware-indicators** (https://github.com/AssoEchap/stalkerware-indicators), licença
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): nomes de pacote e certificados (SHA-1)
+  de apps espiões, convertidos para as linhas `pkg:` e `cert1:`. O app mostra o crédito em
+  Ajustes → Fontes de dados de ameaças.
+
 ## Segredos
 
 - `SIGNING_PRIVATE_KEY`: chave privada, no **Environment `assinatura`** (Settings → Environments),
