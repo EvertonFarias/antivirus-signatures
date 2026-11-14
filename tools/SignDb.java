@@ -26,6 +26,9 @@ import java.util.List;
  *   java tools/SignDb.java sign caminho/sha256.txt [arquivo-da-chave]
  *       Atualiza a linha "#version=" com a data/hora UTC atual e gera sha256.txt.sig.
  *       Suba os dois arquivos para a hospedagem estática.
+ *
+ *   java tools/SignDb.java signfile caminho/domains.bin [arquivo-da-chave]
+ *       Assina um arquivo qualquer sem alterá-lo (a versão já vem dentro dele) e gera o .sig.
  */
 public class SignDb {
 
@@ -36,8 +39,10 @@ public class SignDb {
             keygen(args.length >= 2 ? Path.of(args[1]) : DEFAULT_KEY);
         } else if (args.length >= 2 && args[0].equals("sign")) {
             sign(Path.of(args[1]), args.length >= 3 ? Path.of(args[2]) : DEFAULT_KEY);
+        } else if (args.length >= 2 && args[0].equals("signfile")) {
+            signFile(Path.of(args[1]), args.length >= 3 ? Path.of(args[2]) : DEFAULT_KEY);
         } else {
-            System.err.println("Uso: java tools/SignDb.java keygen [chave] | sign <arquivo> [chave]");
+            System.err.println("Uso: java tools/SignDb.java keygen [chave] | sign <arquivo> [chave] | signfile <arquivo> [chave]");
             System.exit(2);
         }
     }
@@ -90,5 +95,20 @@ public class SignDb {
 
         System.out.println("Versao " + version + " com " + entries + " assinatura(s).");
         System.out.println("Gerados: " + dbFile + " e " + sigFile);
+    }
+
+    private static void signFile(Path file, Path privateKeyFile) throws Exception {
+        if (!Files.exists(privateKeyFile)) {
+            System.err.println("Chave privada nao encontrada em " + privateKeyFile + ".");
+            System.exit(1);
+        }
+        byte[] keyBytes = Base64.getDecoder().decode(Files.readString(privateKeyFile).trim());
+        PrivateKey key = KeyFactory.getInstance("EC").generatePrivate(new PKCS8EncodedKeySpec(keyBytes));
+        Signature signer = Signature.getInstance("SHA256withECDSA");
+        signer.initSign(key);
+        signer.update(Files.readAllBytes(file));
+        Path sigFile = file.resolveSibling(file.getFileName() + ".sig");
+        Files.writeString(sigFile, Base64.getEncoder().encodeToString(signer.sign()) + System.lineSeparator().replace("\r", ""));
+        System.out.println("Gerado: " + sigFile);
     }
 }

@@ -1,2 +1,4 @@
-/keys/
-__pycache__/
+domains.bin
+domains.bin.sig
+_site/
+keys/

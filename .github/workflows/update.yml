@@ -5,9 +5,11 @@ on:
     - cron: "17 3 * * *" # todo dia, 03:17 UTC
   workflow_dispatch:
 
-# Só o necessário para fazer o commit da base assinada.
+# contents: commit da base pequena; pages/id-token: publicar o site (com a lista de domínios).
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: update-signatures
@@ -16,7 +18,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     # A chave privada fica no Environment "assinatura", liberado só para o branch main.
     # Outros branches, forks e PRs (inclusive do Dependabot) não conseguem lê-la.
     environment: assinatura
@@ -34,10 +36,16 @@ jobs:
       - name: Montar a base com as fontes publicas
         run: python3 scripts/update_db.py
 
-      # Assina todo dia, mesmo sem hashes novos (e mesmo se a busca falhar): a data em
+      # Phishing.Database (MIT) + sites de stalkerware (Echap). Se falhar, o site mantém a lista anterior.
+      - name: Montar a lista de dominios
+        id: domains
+        continue-on-error: true
+        run: python3 scripts/build_domains.py
+
+      # Assina todo dia, mesmo sem novidades (e mesmo se uma fonte falhar): a data em
       # "#version=" prova ao app que a base está viva. Se ela passar de 7 dias, o app avisa
       # que alguém pode estar bloqueando as atualizações.
-      - name: Assinar e publicar
+      - name: Assinar
         if: ${{ !cancelled() }}
         env:
           SIGNING_PRIVATE_KEY: ${{ secrets.SIGNING_PRIVATE_KEY }}
@@ -50,10 +58,45 @@ jobs:
           mkdir -p keys
           printf '%s' "$SIGNING_PRIVATE_KEY" > keys/signing-private.key
           java tools/SignDb.java sign sha256.txt
+          if [ -f domains.bin ]; then java tools/SignDb.java signfile domains.bin; fi
           rm -rf keys
 
+      # Só a base pequena vai para o histórico do Git; a lista de domínios (~3 MB) vai direto
+      # para o site, para o repositório não crescer 1 GB por ano.
+      - name: Guardar a base no historico
+        if: ${{ !cancelled() }}
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add sha256.txt sha256.txt.sig
           git commit -m "Atualiza base de assinaturas"
           git push
+
+      - name: Montar o site
+        if: ${{ !cancelled() }}
+        run: |
+          mkdir -p _site
+          cp sha256.txt sha256.txt.sig *.html _site/
+          touch _site/.nojekyll
+          if [ -f domains.bin ] && [ -f domains.bin.sig ]; then
+            cp domains.bin domains.bin.sig _site/
+          else
+            # Fonte fora do ar hoje: republica a lista de ontem (já assinada).
+            curl -fsSL -o _site/domains.bin https://evertonfarias.github.io/antivirus-signatures/domains.bin || true
+            curl -fsSL -o _site/domains.bin.sig https://evertonfarias.github.io/antivirus-signatures/domains.bin.sig || true
+          fi
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        if: ${{ !cancelled() }}
+        with:
+          path: _site
+
+  deploy:
+    needs: update
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
