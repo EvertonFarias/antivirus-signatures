@@ -34,7 +34,7 @@
   <ul>
     <li><strong>Apps instaladas:</strong> nombre del paquete, permisos, firma digital y el código (hash) del archivo de instalación, para identificar malware. Esta lista nunca sale del dispositivo.</li>
     <li><strong>Enlaces, mensajes y códigos QR</strong> que pegas, compartes o escaneas en la app: se analizan localmente y se descartan. No guardamos el contenido.</li>
-    <li><strong>Archivos APK</strong> de la carpeta Descargas o de donde elijas: se leen en el dispositivo solo para calcular su código (hash) y analizarlos. Los archivos elegidos con el selector del sistema se copian temporalmente al área privada de la app y se borran enseguida.</li>
+    <li><strong>Archivos</strong> (apps, paquetes de apps, ZIP, páginas web, programas y documentos que pueden ocultar una app) de la carpeta Descargas, de los documentos de WhatsApp/Telegram o de donde elijas: se leen en el dispositivo solo para calcular su código (hash) y analizarlos. De las fotos y documentos solo se leen los primeros bytes, para saber si en realidad son una app o un programa. Los archivos elegidos con el selector del sistema se copian temporalmente al área privada de la app y se borran enseguida.</li>
     <li><strong>Ajustes del dispositivo</strong> (bloqueo de pantalla, actualización de seguridad, Wi-Fi, DNS privado): solo se leen para mostrar recomendaciones.</li>
   </ul>
 
@@ -51,7 +51,7 @@
   <h2>3. Permisos</h2>
   <ul>
     <li><strong>Ver todas las apps instaladas</strong> (QUERY_ALL_PACKAGES): la función principal de un antivirus — encontrar apps maliciosas.</li>
-    <li><strong>Acceso a todos los archivos</strong> (MANAGE_EXTERNAL_STORAGE, opcional): encontrar y analizar archivos APK en la carpeta Descargas y en el almacenamiento, incluidos los nuevos que lleguen. Los archivos solo se leen en el dispositivo y nunca se envían.</li>
+    <li><strong>Acceso a todos los archivos</strong> (MANAGE_EXTERNAL_STORAGE, opcional): encontrar y analizar archivos de riesgo (apps, paquetes, páginas, archivos disfrazados) en la carpeta Descargas y en el almacenamiento, incluidos los nuevos que lleguen. Los archivos solo se leen en el dispositivo y nunca se envían.</li>
     <li><strong>Notificaciones:</strong> avisarte cuando aparezca una app o archivo peligroso.</li>
     <li><strong>Internet y estado de la red:</strong> actualizar la base de firmas, comprobar contraseñas filtradas y ver si tu Wi-Fi es seguro.</li>
     <li><strong>Solicitar la eliminación de apps:</strong> abrir la pantalla de Android para que desinstales una app sospechosa. La eliminación solo ocurre si la confirmas.</li>

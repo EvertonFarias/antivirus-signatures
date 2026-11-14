@@ -34,7 +34,7 @@
   <ul>
     <li><strong>Installed apps:</strong> package name, permissions, digital signature and the hash of the installation file, to identify malware. This list never leaves the device.</li>
     <li><strong>Links, messages and QR codes</strong> you paste, share or scan in the app: analyzed locally and discarded. We don't store the content.</li>
-    <li><strong>APK files</strong> in the Download folder or anywhere you choose: read on the device only to calculate their hash and check them. Files picked through the system file picker are copied temporarily to the app's private area and deleted right after.</li>
+    <li><strong>Files</strong> (apps, app packages, ZIPs, web pages, programs and documents that may hide an app) in the Download folder, WhatsApp/Telegram documents or anywhere you choose: read on the device only to calculate their hash and check them. Photos and documents are only opened to read their first bytes, to see whether they are really an app or program. Files picked through the system file picker are copied temporarily to the app's private area and deleted right after.</li>
     <li><strong>Device settings</strong> (screen lock, security update, Wi-Fi, private DNS): only read to show recommendations.</li>
   </ul>
 
@@ -51,7 +51,7 @@
   <h2>3. Permissions</h2>
   <ul>
     <li><strong>See all installed apps</strong> (QUERY_ALL_PACKAGES): the core function of an antivirus — finding malicious apps.</li>
-    <li><strong>All files access</strong> (MANAGE_EXTERNAL_STORAGE, optional): find and check APK files in the Download folder and in storage, including new APKs that arrive there. Files are only read on the device and never uploaded.</li>
+    <li><strong>All files access</strong> (MANAGE_EXTERNAL_STORAGE, optional): find and check risky files (apps, packages, web pages, disguised files) in the Download folder and in storage, including new ones that arrive there. Files are only read on the device and never uploaded.</li>
     <li><strong>Notifications:</strong> warn you when a dangerous app or file shows up.</li>
     <li><strong>Internet and network state:</strong> update the signature database, check leaked passwords and see whether your Wi-Fi is secure.</li>
     <li><strong>Request app removal:</strong> open Android's screen so you can uninstall a suspicious app. Removal only happens if you confirm.</li>

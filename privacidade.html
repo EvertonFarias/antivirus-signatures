@@ -34,7 +34,7 @@
   <ul>
     <li><strong>Apps instalados:</strong> nome do pacote, permissões, assinatura digital e o código (hash) do arquivo de instalação, para identificar malware. Essa lista nunca sai do aparelho.</li>
     <li><strong>Links, mensagens e QR Codes</strong> que você cola, compartilha ou lê no app: analisados localmente e descartados. Não guardamos o conteúdo.</li>
-    <li><strong>Arquivos APK</strong> da pasta Download ou de onde você escolher: lidos no aparelho só para calcular o código (hash) e analisar. Arquivos escolhidos pelo seletor do sistema são copiados temporariamente para a área privada do app e apagados em seguida.</li>
+    <li><strong>Arquivos</strong> (apps, pacotes de apps, ZIPs, páginas da web, programas e documentos que podem esconder um app) da pasta Download, dos documentos do WhatsApp/Telegram ou de onde você escolher: lidos no aparelho só para calcular o código (hash) e analisar. Fotos e documentos só têm os primeiros bytes lidos, para saber se na verdade são um app ou programa. Arquivos escolhidos pelo seletor do sistema são copiados temporariamente para a área privada do app e apagados em seguida.</li>
     <li><strong>Configurações do aparelho</strong> (bloqueio de tela, atualização de segurança, Wi-Fi, DNS privado): apenas lidas para mostrar recomendações.</li>
   </ul>
 
@@ -51,7 +51,7 @@
   <h2>3. Permissões</h2>
   <ul>
     <li><strong>Ver todos os apps instalados</strong> (QUERY_ALL_PACKAGES): função principal de um antivírus — encontrar apps maliciosos.</li>
-    <li><strong>Acesso a todos os arquivos</strong> (MANAGE_EXTERNAL_STORAGE, opcional): encontrar e analisar arquivos APK na pasta Download e no armazenamento, inclusive os novos que chegarem. Os arquivos só são lidos no aparelho e nunca são enviados.</li>
+    <li><strong>Acesso a todos os arquivos</strong> (MANAGE_EXTERNAL_STORAGE, opcional): encontrar e analisar arquivos de risco (apps, pacotes, páginas, arquivos disfarçados) na pasta Download e no armazenamento, inclusive os novos que chegarem. Os arquivos só são lidos no aparelho e nunca são enviados.</li>
     <li><strong>Notificações:</strong> avisar quando um app ou arquivo perigoso aparecer.</li>
     <li><strong>Internet e estado da rede:</strong> atualizar a base de assinaturas, checar senhas vazadas e verificar se o Wi-Fi é seguro.</li>
     <li><strong>Solicitar remoção de apps:</strong> abrir a tela do Android para você desinstalar um app suspeito. A remoção só acontece se você confirmar.</li>
