@@ -4,12 +4,8 @@ on:
   schedule:
     - cron: "17 3 * * *" # todo dia, 03:17 UTC
   workflow_dispatch:
-    inputs:
-      force_sign:
-        description: "Assinar e publicar mesmo sem hashes novos"
-        type: boolean
-        default: false
 
+# Só o necessário para fazer o commit da base assinada.
 permissions:
   contents: write
 
@@ -20,29 +16,38 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # A chave privada fica no Environment "assinatura", liberado só para o branch main.
+    # Outros branches, forks e PRs (inclusive do Dependabot) não conseguem lê-la.
+    environment: assinatura
     steps:
-      - uses: actions/checkout@v5
+      # Actions fixadas por commit: uma tag pode ser movida para código malicioso, um commit não.
+      # O Dependabot (.github/dependabot.yml) abre PR quando sair versão nova.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
 
       - name: Buscar hashes novos
-        id: fetch
         env:
           MB_AUTH_KEY: ${{ secrets.MB_AUTH_KEY }}
         run: python3 scripts/update_db.py
 
+      # Assina todo dia, mesmo sem hashes novos (e mesmo se a busca falhar): a data em
+      # "#version=" prova ao app que a base está viva. Se ela passar de 7 dias, o app avisa
+      # que alguém pode estar bloqueando as atualizações.
       - name: Assinar e publicar
-        if: steps.fetch.outputs.changed == 'true' || inputs.force_sign
+        if: ${{ !cancelled() }}
         env:
           SIGNING_PRIVATE_KEY: ${{ secrets.SIGNING_PRIVATE_KEY }}
         run: |
           if [ -z "$SIGNING_PRIVATE_KEY" ]; then
-            echo "::error::Secret SIGNING_PRIVATE_KEY não configurado"
+            echo "::error::Secret SIGNING_PRIVATE_KEY não configurado no Environment 'assinatura'"
             exit 1
           fi
+          umask 077
           mkdir -p keys
           printf '%s' "$SIGNING_PRIVATE_KEY" > keys/signing-private.key
           java tools/SignDb.java sign sha256.txt

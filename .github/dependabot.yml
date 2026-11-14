@@ -1,0 +1,7 @@
+version: 2
+updates:
+  # Mantém as Actions fixadas por commit atualizadas (abre PR com o commit novo).
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

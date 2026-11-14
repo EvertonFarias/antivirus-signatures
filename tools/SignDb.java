@@ -18,56 +18,56 @@ import java.util.List;
 /**
  * Assina a base de assinaturas do antivírus. Roda direto com o JDK, sem compilar:
  *
- *   java tools/SignDb.java keygen
- *       Gera o par de chaves. A privada fica em keys/signing-private.key
- *       (NUNCA suba para o Git). A pública aparece na tela: cole em
- *       SIGNATURES_PUBLIC_KEY no app/build.gradle.kts.
+ *   java tools/SignDb.java keygen [arquivo-da-chave]
+ *       Gera um par de chaves. A privada fica em keys/signing-private.key (ou no arquivo
+ *       indicado; NUNCA suba para o Git). A pública aparece na tela: adicione em
+ *       SIGNATURES_PUBLIC_KEYS no app/build.gradle.kts.
  *
- *   java tools/SignDb.java sign caminho/sha256.txt
+ *   java tools/SignDb.java sign caminho/sha256.txt [arquivo-da-chave]
  *       Atualiza a linha "#version=" com a data/hora UTC atual e gera sha256.txt.sig.
  *       Suba os dois arquivos para a hospedagem estática.
  */
 public class SignDb {
 
-    private static final Path PRIVATE_KEY = Path.of("keys", "signing-private.key");
+    private static final Path DEFAULT_KEY = Path.of("keys", "signing-private.key");
 
     public static void main(String[] args) throws Exception {
         if (args.length >= 1 && args[0].equals("keygen")) {
-            keygen();
+            keygen(args.length >= 2 ? Path.of(args[1]) : DEFAULT_KEY);
         } else if (args.length >= 2 && args[0].equals("sign")) {
-            sign(Path.of(args[1]));
+            sign(Path.of(args[1]), args.length >= 3 ? Path.of(args[2]) : DEFAULT_KEY);
         } else {
-            System.err.println("Uso: java tools/SignDb.java keygen | sign <arquivo>");
+            System.err.println("Uso: java tools/SignDb.java keygen [chave] | sign <arquivo> [chave]");
             System.exit(2);
         }
     }
 
-    private static void keygen() throws Exception {
-        if (Files.exists(PRIVATE_KEY)) {
-            System.err.println("Ja existe " + PRIVATE_KEY + ". Apague manualmente se quiser mesmo trocar a chave");
-            System.err.println("(isso exige publicar uma versao nova do app com a nova chave publica).");
+    private static void keygen(Path privateKeyFile) throws Exception {
+        if (Files.exists(privateKeyFile)) {
+            System.err.println("Ja existe " + privateKeyFile + ". Apague manualmente se quiser mesmo trocar a chave");
+            System.err.println("(o app so aceita as chaves publicas listadas em SIGNATURES_PUBLIC_KEYS).");
             System.exit(1);
         }
         KeyPairGenerator generator = KeyPairGenerator.getInstance("EC");
         generator.initialize(new ECGenParameterSpec("secp256r1"));
         KeyPair pair = generator.generateKeyPair();
 
-        Files.createDirectories(PRIVATE_KEY.getParent());
-        Files.writeString(PRIVATE_KEY, Base64.getEncoder().encodeToString(pair.getPrivate().getEncoded()));
+        if (privateKeyFile.getParent() != null) Files.createDirectories(privateKeyFile.getParent());
+        Files.writeString(privateKeyFile, Base64.getEncoder().encodeToString(pair.getPrivate().getEncoded()));
 
-        System.out.println("Chave privada salva em " + PRIVATE_KEY.toAbsolutePath());
+        System.out.println("Chave privada salva em " + privateKeyFile.toAbsolutePath());
         System.out.println("FACA BACKUP DELA em um lugar seguro. Se perder, nao da para atualizar a base.");
         System.out.println();
-        System.out.println("Chave publica (cole em SIGNATURES_PUBLIC_KEY):");
+        System.out.println("Chave publica (adicione em SIGNATURES_PUBLIC_KEYS):");
         System.out.println(Base64.getEncoder().encodeToString(pair.getPublic().getEncoded()));
     }
 
-    private static void sign(Path dbFile) throws Exception {
-        if (!Files.exists(PRIVATE_KEY)) {
-            System.err.println("Chave privada nao encontrada em " + PRIVATE_KEY + ". Rode 'keygen' primeiro.");
+    private static void sign(Path dbFile, Path privateKeyFile) throws Exception {
+        if (!Files.exists(privateKeyFile)) {
+            System.err.println("Chave privada nao encontrada em " + privateKeyFile + ". Rode 'keygen' primeiro.");
             System.exit(1);
         }
-        byte[] keyBytes = Base64.getDecoder().decode(Files.readString(PRIVATE_KEY).trim());
+        byte[] keyBytes = Base64.getDecoder().decode(Files.readString(privateKeyFile).trim());
         PrivateKey key = KeyFactory.getInstance("EC").generatePrivate(new PKCS8EncodedKeySpec(keyBytes));
 
         String version = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));

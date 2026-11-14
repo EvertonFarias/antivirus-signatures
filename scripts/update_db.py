@@ -3,7 +3,7 @@
 Precisa da variável MB_AUTH_KEY (chave gratuita em https://auth.abuse.ch/).
 Sem a chave, não faz nada e sai com sucesso.
 
-Escreve changed=true|false em $GITHUB_OUTPUT para o workflow decidir se assina e publica.
+Escreve changed=true|false em $GITHUB_OUTPUT (informativo: o workflow assina todo dia).
 """
 
 import json
