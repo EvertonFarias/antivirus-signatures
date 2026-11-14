@@ -1,4 +1,4 @@
-#version=202611141223
+#version=202611141459
 # Base de ameacas do MeowGuard: <sha256>;<nome> | pkg:<pacote>;<nome> | cert1:<sha1>;<nome>
 # Fontes: MalwareBazaar (abuse.ch); Echap stalkerware-indicators (CC BY 4.0)
 cert1:002dd372c94e80600c7c60192cbd701a3c3b87ee;Stalkerware.RealtimeSpy
