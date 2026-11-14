@@ -44,6 +44,7 @@
     <tr><td>Descargar la base de firmas de malware (GitHub Pages)</td><td>Nada más que una solicitud de descarga. GitHub ve la dirección IP, como en cualquier sitio web.</td></tr>
     <tr><td>Comprobar si una contraseña se filtró (Have I Been Pwned)</td><td>Solo los 5 primeros caracteres del código SHA-1 de la contraseña (k-anonimato). La contraseña y el código completo nunca salen del dispositivo.</td></tr>
     <tr><td>Compra de la app (Google Play)</td><td>La procesa Google Play. No recibimos datos de pago.</td></tr>
+    <tr><td>Descargar la lista de sitios peligrosos (GitHub Pages), solo con la Navegación segura activada</td><td>Nada más que una solicitud de descarga.</td></tr>
     <tr><td>Lector de códigos QR (Google Play Services)</td><td>La lectura ocurre en el dispositivo; la imagen de la cámara no se nos envía.</td></tr>
   </table>
 
@@ -54,6 +55,10 @@
     <li><strong>Notificaciones:</strong> avisarte cuando aparezca una app o archivo peligroso.</li>
     <li><strong>Internet y estado de la red:</strong> actualizar la base de firmas, comprobar contraseñas filtradas y ver si tu Wi-Fi es seguro.</li>
     <li><strong>Solicitar la eliminación de apps:</strong> abrir la pantalla de Android para que desinstales una app sospechosa. La eliminación solo ocurre si la confirmas.</li>
+    <li><strong>VPN (opcional, "Navegación segura")</strong>: una VPN local que solo recibe las consultas de DNS del teléfono (el nombre de los sitios). Los sitios peligrosos reciben la respuesta "no existe" en el propio dispositivo; los demás se envían al DNS normal de tu red. No se nos envía tráfico ni a terceros, nada se registra fuera del dispositivo y el resto del tráfico no pasa por la VPN.</li>
+    <li><strong>Acceso a uso (opcional, "Bloqueo de apps")</strong>: solo para saber qué app está en pantalla, para que las apps que elegiste pidan desbloqueo. No se guarda ni se envía.</li>
+    <li><strong>Mostrar sobre otras apps (opcional, "Bloqueo de apps")</strong>: para cubrir una app bloqueada en cuanto se abre.</li>
+    <li><strong>Biometría</strong>: el desbloqueo usa la pantalla de huella, rostro o PIN del propio Android. MeowGuard nunca ve ni guarda esos datos.</li>
   </ul>
 
   <h2>4. Almacenamiento</h2>

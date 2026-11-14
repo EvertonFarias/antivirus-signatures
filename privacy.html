@@ -44,6 +44,7 @@
     <tr><td>Download the malware signature database (GitHub Pages)</td><td>Nothing but a download request. GitHub sees the IP address, as with any website.</td></tr>
     <tr><td>Check whether a password leaked (Have I Been Pwned)</td><td>Only the first 5 characters of the password's SHA-1 hash (k-anonymity). The password and the full hash never leave the device.</td></tr>
     <tr><td>App purchase (Google Play)</td><td>Processed by Google Play. We don't receive any payment data.</td></tr>
+    <tr><td>Download the list of dangerous sites (GitHub Pages), only if Safe browsing is on</td><td>Nothing but a download request.</td></tr>
     <tr><td>QR code scanner (Google Play Services)</td><td>Scanning happens on the device; the camera image is not sent to us.</td></tr>
   </table>
 
@@ -54,6 +55,10 @@
     <li><strong>Notifications:</strong> warn you when a dangerous app or file shows up.</li>
     <li><strong>Internet and network state:</strong> update the signature database, check leaked passwords and see whether your Wi-Fi is secure.</li>
     <li><strong>Request app removal:</strong> open Android's screen so you can uninstall a suspicious app. Removal only happens if you confirm.</li>
+    <li><strong>VPN (optional, "Safe browsing")</strong>: a local VPN that only receives the phone's DNS lookups (site names). Dangerous sites are answered with "does not exist" right on the phone; everything else is passed to your network's normal DNS. No traffic is sent to us or to third parties, nothing is logged off the device, and the rest of your traffic doesn't go through the VPN.</li>
+    <li><strong>Usage access (optional, "App lock")</strong>: only to know which app is on screen, so the apps you chose can ask to unlock. It is not stored or sent anywhere.</li>
+    <li><strong>Display over other apps (optional, "App lock")</strong>: to cover a locked app the moment it opens.</li>
+    <li><strong>Biometrics</strong>: unlocking uses Android's own fingerprint, face or PIN screen. MeowGuard never sees or stores this information.</li>
   </ul>
 
   <h2>4. Storage</h2>

@@ -44,6 +44,7 @@
     <tr><td>Baixar a base de assinaturas de malware (GitHub Pages)</td><td>Nada além de um pedido de download. O GitHub vê o endereço IP, como em qualquer site.</td></tr>
     <tr><td>Verificar se uma senha vazou (Have I Been Pwned)</td><td>Só os 5 primeiros caracteres do código SHA-1 da senha (técnica de k-anonimato). A senha e o código completo nunca saem do aparelho.</td></tr>
     <tr><td>Compra do app (Google Play)</td><td>Processada pelo Google Play. Não recebemos dados de pagamento.</td></tr>
+    <tr><td>Baixar a lista de sites perigosos (GitHub Pages), só com a Proteção na navegação ligada</td><td>Nada além de um pedido de download.</td></tr>
     <tr><td>Leitor de QR Code (Google Play Services)</td><td>A leitura acontece no aparelho; a imagem da câmera não é enviada para nós.</td></tr>
   </table>
 
@@ -54,6 +55,10 @@
     <li><strong>Notificações:</strong> avisar quando um app ou arquivo perigoso aparecer.</li>
     <li><strong>Internet e estado da rede:</strong> atualizar a base de assinaturas, checar senhas vazadas e verificar se o Wi-Fi é seguro.</li>
     <li><strong>Solicitar remoção de apps:</strong> abrir a tela do Android para você desinstalar um app suspeito. A remoção só acontece se você confirmar.</li>
+    <li><strong>VPN (opcional, "Proteção na navegação")</strong>: uma VPN local que só recebe as consultas de DNS do celular (o nome dos sites). Sites perigosos recebem a resposta "não existe" no próprio aparelho; os demais são repassados ao DNS normal da sua rede. Nenhum tráfego é enviado para nós ou terceiros, nada é registrado fora do aparelho e o resto do tráfego não passa pela VPN.</li>
+    <li><strong>Acesso ao uso (opcional, "Cadeado de apps")</strong>: só para saber qual app está na tela, para os apps que você escolheu pedirem desbloqueio. Não é guardado nem enviado.</li>
+    <li><strong>Aparecer sobre outros apps (opcional, "Cadeado de apps")</strong>: para cobrir um app trancado assim que ele abre.</li>
+    <li><strong>Biometria</strong>: o desbloqueio usa a tela de digital, rosto ou PIN do próprio Android. O MeowGuard nunca vê nem guarda essas informações.</li>
   </ul>
 
   <h2>4. Armazenamento</h2>
