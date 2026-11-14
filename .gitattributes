@@ -1,0 +1,4 @@
+* text=auto eol=lf
+# Arquivos assinados: os bytes precisam ficar idênticos
+sha256.txt -text
+sha256.txt.sig -text

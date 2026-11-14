@@ -1,0 +1,3 @@
+#version=202611140242
+# Base de assinaturas: <sha256>;<nome da ameaça>
+# Fonte automática: MalwareBazaar (abuse.ch)
