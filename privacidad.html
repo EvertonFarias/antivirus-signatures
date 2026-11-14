@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Política de Privacidad — MeowGuard</title>
+<style>
+  :root { --bg:#f3f4f6; --fg:#14171c; --muted:#5e6470; --card:#fff; --accent:#0e8c74; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0b0d11; --fg:#e8eaee; --muted:#9ca2ad; --card:#15181e; --accent:#3ee0be; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:32px 16px 64px; }
+  h1 { font-size:1.8rem; margin:0 0 4px; }
+  h2 { font-size:1.15rem; margin:32px 0 8px; color:var(--accent); }
+  .muted { color:var(--muted); }
+  .langs { float:right; font-size:.9rem; }
+  .card { background:var(--card); border-radius:16px; padding:16px 20px; margin:16px 0; }
+  table { width:100%; border-collapse:collapse; }
+  td, th { text-align:left; padding:8px 6px; border-bottom:1px solid rgba(127,127,127,.2); vertical-align:top; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <nav class="langs"><a href="privacy.html" hreflang="en">English</a> · <a href="privacidade.html" hreflang="pt">Português</a> · <a href="privacidad.html" hreflang="es">Español</a></nav>
+  <h1>Política de Privacidad</h1>
+  <p class="muted">MeowGuard (antivirus para Android) · Actualizada el 14/11/2026</p>
+
+  <div class="card">
+    <strong>Resumen:</strong> la app analiza todo en tu teléfono. No recopilamos, no vendemos y no
+    compartimos tus datos personales. No hay registro, anuncios ni herramientas de rastreo.
+  </div>
+
+  <h2>1. Qué analiza la app (siempre en el dispositivo)</h2>
+  <ul>
+    <li><strong>Apps instaladas:</strong> nombre del paquete, permisos, firma digital y el código (hash) del archivo de instalación, para identificar malware. Esta lista nunca sale del dispositivo.</li>
+    <li><strong>Enlaces, mensajes y códigos QR</strong> que pegas, compartes o escaneas en la app: se analizan localmente y se descartan. No guardamos el contenido.</li>
+    <li><strong>Archivos APK</strong> de la carpeta Descargas o de donde elijas: se leen en el dispositivo solo para calcular su código (hash) y analizarlos. Los archivos elegidos con el selector del sistema se copian temporalmente al área privada de la app y se borran enseguida.</li>
+    <li><strong>Ajustes del dispositivo</strong> (bloqueo de pantalla, actualización de seguridad, Wi-Fi, DNS privado): solo se leen para mostrar recomendaciones.</li>
+  </ul>
+
+  <h2>2. Conexiones a internet</h2>
+  <table>
+    <tr><th>Para qué</th><th>Qué se envía</th></tr>
+    <tr><td>Descargar la base de firmas de malware (GitHub Pages)</td><td>Nada más que una solicitud de descarga. GitHub ve la dirección IP, como en cualquier sitio web.</td></tr>
+    <tr><td>Comprobar si una contraseña se filtró (Have I Been Pwned)</td><td>Solo los 5 primeros caracteres del código SHA-1 de la contraseña (k-anonimato). La contraseña y el código completo nunca salen del dispositivo.</td></tr>
+    <tr><td>Compra de la app (Google Play)</td><td>La procesa Google Play. No recibimos datos de pago.</td></tr>
+    <tr><td>Lector de códigos QR (Google Play Services)</td><td>La lectura ocurre en el dispositivo; la imagen de la cámara no se nos envía.</td></tr>
+  </table>
+
+  <h2>3. Permisos</h2>
+  <ul>
+    <li><strong>Ver todas las apps instaladas</strong> (QUERY_ALL_PACKAGES): la función principal de un antivirus — encontrar apps maliciosas.</li>
+    <li><strong>Acceso a todos los archivos</strong> (MANAGE_EXTERNAL_STORAGE, opcional): encontrar y analizar archivos APK en la carpeta Descargas y en el almacenamiento, incluidos los nuevos que lleguen. Los archivos solo se leen en el dispositivo y nunca se envían.</li>
+    <li><strong>Notificaciones:</strong> avisarte cuando aparezca una app o archivo peligroso.</li>
+    <li><strong>Internet y estado de la red:</strong> actualizar la base de firmas, comprobar contraseñas filtradas y ver si tu Wi-Fi es seguro.</li>
+    <li><strong>Solicitar la eliminación de apps:</strong> abrir la pantalla de Android para que desinstales una app sospechosa. La eliminación solo ocurre si la confirmas.</li>
+  </ul>
+
+  <h2>4. Almacenamiento</h2>
+  <p>La app solo guarda en el dispositivo: tus preferencias, las apps que marcaste como de confianza, el resumen del último análisis y los hashes ya calculados (para no recalcularlos). Todo se borra al desinstalar la app.</p>
+
+  <h2>5. Menores</h2>
+  <p>La app no está dirigida a menores de 13 años y no recopila datos de nadie.</p>
+
+  <h2>6. Tus derechos (RGPD, LGPD y leyes similares)</h2>
+  <p>Como no recopilamos datos personales, no hay datos tuyos en nuestros sistemas que consultar, corregir, exportar o eliminar. Puedes enviar tus dudas por el canal de abajo.</p>
+
+  <h2>7. Contacto</h2>
+  <p>Abre una solicitud en <a href="https://github.com/EvertonFarias/antivirus-signatures/issues">github.com/EvertonFarias/antivirus-signatures/issues</a> o usa el correo de contacto indicado en la página de la app en Google Play.</p>
+
+  <h2>8. Cambios</h2>
+  <p>Si esta política cambia, la nueva versión se publicará en esta página con la fecha actualizada.</p>
+</main>
+</body>
+</html>
