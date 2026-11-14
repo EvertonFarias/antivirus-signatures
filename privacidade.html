@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Política de Privacidade — Gato Guardião</title>
+<style>
+  :root { --bg:#f4f6fa; --fg:#0f1b2b; --muted:#5b6878; --card:#fff; --accent:#e8891a; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#07111e; --fg:#e6ecf4; --muted:#9aa8ba; --card:#0f1d2f; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:32px 16px 64px; }
+  h1 { font-size:1.8rem; margin:0 0 4px; }
+  h2 { font-size:1.15rem; margin:32px 0 8px; color:var(--accent); }
+  .muted { color:var(--muted); }
+  .card { background:var(--card); border-radius:16px; padding:16px 20px; margin:16px 0; }
+  table { width:100%; border-collapse:collapse; }
+  td, th { text-align:left; padding:8px 6px; border-bottom:1px solid rgba(127,127,127,.2); vertical-align:top; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Política de Privacidade</h1>
+  <p class="muted">Gato Guardião (antivírus para Android) · Atualizada em 14/11/2026</p>
+
+  <div class="card">
+    <strong>Resumo:</strong> o app analisa tudo no seu celular. Não coletamos, não vendemos e não
+    compartilhamos seus dados pessoais. Não há cadastro, anúncios nem ferramentas de rastreamento.
+  </div>
+
+  <h2>1. O que o app analisa (sempre no aparelho)</h2>
+  <ul>
+    <li><strong>Apps instalados:</strong> nome do pacote, permissões, assinatura digital e o código (hash) do arquivo de instalação, para identificar malware. Essa lista nunca sai do aparelho.</li>
+    <li><strong>Links, mensagens e QR Codes</strong> que você cola, compartilha ou lê no app: analisados localmente e descartados. Não guardamos o conteúdo.</li>
+    <li><strong>Arquivos APK</strong> que você escolhe: copiados temporariamente para a área privada do app, analisados e apagados em seguida.</li>
+    <li><strong>Configurações do aparelho</strong> (bloqueio de tela, atualização de segurança, Wi-Fi, DNS privado): apenas lidas para mostrar recomendações.</li>
+  </ul>
+
+  <h2>2. Conexões com a internet</h2>
+  <table>
+    <tr><th>Para quê</th><th>O que é enviado</th></tr>
+    <tr><td>Baixar a base de assinaturas de malware (GitHub Pages)</td><td>Nada além de um pedido de download. O GitHub vê o endereço IP, como em qualquer site.</td></tr>
+    <tr><td>Verificar se uma senha vazou (Have I Been Pwned)</td><td>Só os 5 primeiros caracteres do código SHA-1 da senha (técnica de k-anonimato). A senha e o código completo nunca saem do aparelho.</td></tr>
+    <tr><td>Assinatura PRO (Google Play)</td><td>Processada pelo Google Play. Não recebemos dados de pagamento.</td></tr>
+    <tr><td>Leitor de QR Code (Google Play Services)</td><td>A leitura acontece no aparelho; a imagem da câmera não é enviada para nós.</td></tr>
+  </table>
+
+  <h2>3. Permissões</h2>
+  <ul>
+    <li><strong>Ver todos os apps instalados</strong> (QUERY_ALL_PACKAGES): função principal de um antivírus — encontrar apps maliciosos.</li>
+    <li><strong>Notificações:</strong> avisar quando um app perigoso for instalado.</li>
+    <li><strong>Internet e estado da rede:</strong> atualizar a base de assinaturas, checar senhas vazadas e verificar se o Wi-Fi é seguro.</li>
+    <li><strong>Solicitar remoção de apps:</strong> abrir a tela do Android para você desinstalar um app suspeito. A remoção só acontece se você confirmar.</li>
+  </ul>
+
+  <h2>4. Armazenamento</h2>
+  <p>O app guarda no próprio aparelho apenas: suas preferências, a lista de apps que você marcou como confiáveis, o resumo da última varredura e os hashes já calculados (para não recalcular). Tudo é apagado ao desinstalar o app.</p>
+
+  <h2>5. Crianças</h2>
+  <p>O app não é direcionado a menores de 13 anos e não coleta dados de ninguém.</p>
+
+  <h2>6. Seus direitos (LGPD)</h2>
+  <p>Como não coletamos dados pessoais, não há dados seus em nossos sistemas para acessar, corrigir ou excluir. Dúvidas podem ser enviadas pelo canal abaixo.</p>
+
+  <h2>7. Contato</h2>
+  <p>Abra uma solicitação em <a href="https://github.com/EvertonFarias/antivirus-signatures/issues">github.com/EvertonFarias/antivirus-signatures/issues</a> ou use o e-mail de contato informado na página do app na Google Play.</p>
+
+  <h2>8. Alterações</h2>
+  <p>Se esta política mudar, a nova versão será publicada nesta página com a data atualizada.</p>
+</main>
+</body>
+</html>
