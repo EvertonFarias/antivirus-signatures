@@ -18,6 +18,11 @@ sem hashes novos: o app usa a data de `#version=` para avisar quando a base pass
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): nomes de pacote e certificados (SHA-1)
   de apps espiões, convertidos para as linhas `pkg:` e `cert1:`. O app mostra o crédito em
   Ajustes → Fontes de dados de ameaças.
+- **Phishing.Database** (https://github.com/Phishing-Database/Phishing.Database), licença MIT,
+  Copyright (c) 2018-2025 Mitchell Krog: domínios de phishing ativos. Vão para `domains.bin`
+  (hashes de 64 bits ordenados), publicado pelo Actions direto no site, sem entrar no histórico.
+  Domínios essenciais e raízes de plataformas (`PROTECTED` em `scripts/build_domains.py`) nunca
+  são bloqueados inteiros.
 
 O **MalwareBazaar/abuse.ch não é usado**: pelos termos de uso em vigor desde novembro de 2025,
 o uso comercial exige assinatura paga pela Spamhaus (https://abuse.ch/terms-of-use/).
