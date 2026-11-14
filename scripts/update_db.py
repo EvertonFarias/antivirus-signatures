@@ -1,29 +1,35 @@
-"""Monta a base de ameaças (sha256.txt) a partir de fontes públicas. Roda no GitHub Actions.
+"""Monta a base de ameaças (sha256.txt) a partir de fontes públicas que permitem uso comercial.
+Roda no GitHub Actions, todo dia.
 
 Fontes:
-- MalwareBazaar (abuse.ch): hashes SHA-256 de APKs maliciosos recentes. Precisa da variável
-  MB_AUTH_KEY (chave gratuita em https://auth.abuse.ch/). Sem ela, mantém os hashes que já existem.
+- ESET malware-ioc (BSD-2-Clause, Copyright (c) 2014-2018 ESET spol. s r.o.): SHA-256 das amostras
+  de cada investigação publicada pela ESET (Android e outras plataformas).
+  https://github.com/eset/malware-ioc
 - Echap stalkerware-indicators (CC BY 4.0): nomes de pacote e certificados (SHA-1) de apps espiões.
   https://github.com/AssoEchap/stalkerware-indicators
 
+(O MalwareBazaar/abuse.ch não é usado: pelos termos de uso de nov/2025, uso comercial exige
+assinatura paga pela Spamhaus.)
+
 Formato das linhas:
-    <sha256>;<nome>            hash do APK
+    <sha256>;<nome>            hash do arquivo
     pkg:<pacote>;<nome>        nome do pacote
     cert1:<sha1>;<nome>        certificado de assinatura
-O SignDb.java recria a linha "#version=" ao assinar.
+O SignDb.java recria a linha "#version=" ao assinar. Se uma fonte falhar num dia, mantém as
+linhas dela da véspera.
 
 Escreve changed=true|false em $GITHUB_OUTPUT (informativo: o workflow assina todo dia).
 """
 
-import json
+import io
 import os
 import re
 import sys
-import urllib.parse
+import tarfile
 import urllib.request
 
 DB_PATH = "sha256.txt"
-MB_API_URL = "https://mb-api.abuse.ch/api/v1/"
+ESET_TARBALL = "https://codeload.github.com/eset/malware-ioc/tar.gz/refs/heads/master"
 STALKERWARE_URL = "https://raw.githubusercontent.com/AssoEchap/stalkerware-indicators/master/ioc.yaml"
 USER_AGENT = "signature-feed-updater"
 
@@ -33,46 +39,37 @@ PACKAGE_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+$")
 
 HEADER = [
     "# Base de ameacas do MeowGuard: <sha256>;<nome> | pkg:<pacote>;<nome> | cert1:<sha1>;<nome>",
-    "# Fontes: MalwareBazaar (abuse.ch); Echap stalkerware-indicators (CC BY 4.0)",
+    "# Fontes: ESET malware-ioc (BSD-2-Clause, (c) ESET spol. s r.o.); Echap stalkerware-indicators (CC BY 4.0)",
 ]
 
 
-def load_hashes(path):
-    """Hashes já existentes (acumulam ao longo do tempo)."""
-    hashes = {}
-    if not os.path.exists(path):
-        return hashes
-    with open(path, encoding="utf-8") as f:
-        for raw in f:
-            line = raw.strip()
-            if not line or line.startswith("#"):
-                continue
-            key, _, name = line.partition(";")
-            key = key.strip().lower()
-            if SHA256_RE.match(key):
-                hashes[key] = name.strip() or "Android.Malware.Generic"
-    return hashes
-
-
-def fetch(url, data=None, headers=None, timeout=60):
-    request = urllib.request.Request(url, data=data, headers={"User-Agent": USER_AGENT, **(headers or {})})
+def fetch(url, timeout=120):
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=timeout) as response:
         return response.read()
 
 
-def fetch_recent_apks(auth_key):
-    body = urllib.parse.urlencode({"query": "get_file_type", "file_type": "apk", "limit": "1000"}).encode()
-    payload = json.loads(fetch(MB_API_URL, data=body, headers={"Auth-Key": auth_key}))
-    status = payload.get("query_status")
-    if status != "ok":
-        print(f"MalwareBazaar respondeu: {status}")
-        return []
-    return payload.get("data") or []
-
-
-def threat_name(signature):
-    family = re.sub(r"[^A-Za-z0-9._-]", "", signature or "")
-    return f"Android.{family}" if family else "Android.Malware.Generic"
+def eset_lines():
+    """SHA-256 de cada pasta (investigação) do repositório da ESET: <pasta>/samples.sha256."""
+    try:
+        archive = tarfile.open(fileobj=io.BytesIO(fetch(ESET_TARBALL)), mode="r:gz")
+    except Exception as e:
+        print(f"Nao foi possivel baixar a ESET malware-ioc: {e}")
+        return None
+    lines = {}
+    for member in archive.getmembers():
+        parts = member.name.split("/")
+        # malware-ioc-master/<campanha>/samples.sha256
+        if not member.isfile() or len(parts) != 3 or parts[2].lower() != "samples.sha256":
+            continue
+        campaign = re.sub(r"[^A-Za-z0-9_-]", "", parts[1]) or "Generic"
+        content = archive.extractfile(member).read().decode("utf-8", errors="ignore")
+        for raw in content.splitlines():
+            sha = raw.strip().split()[0].lower() if raw.strip() else ""
+            if SHA256_RE.match(sha):
+                lines.setdefault(sha, f"ESET.{campaign}")
+    print(f"ESET: {len(lines)} hash(es).")
+    return sorted(f"{sha};{name}" for sha, name in lines.items())
 
 
 def parse_stalkerware(text):
@@ -105,7 +102,7 @@ def parse_stalkerware(text):
 def stalkerware_lines():
     try:
         apps = parse_stalkerware(fetch(STALKERWARE_URL).decode("utf-8"))
-    except Exception as e:  # sem a lista hoje: o app continua com a da véspera
+    except Exception as e:
         print(f"Nao foi possivel baixar a lista de stalkerware: {e}")
         return None
     lines = []
@@ -125,11 +122,15 @@ def stalkerware_lines():
     return lines
 
 
-def previous_ioc_lines(path):
-    if not os.path.exists(path):
-        return []
-    with open(path, encoding="utf-8") as f:
-        return [l.strip() for l in f if l.startswith(("pkg:", "cert1:"))]
+def previous(before, kind):
+    """Linhas da véspera de uma fonte (para quando ela falhar hoje)."""
+    out = []
+    for line in before.splitlines():
+        if kind == "eset" and ";ESET." in line and SHA256_RE.match(line.split(";")[0]):
+            out.append(line)
+        if kind == "stalkerware" and line.startswith(("pkg:", "cert1:")):
+            out.append(line)
+    return out
 
 
 def write_output(changed):
@@ -141,27 +142,16 @@ def write_output(changed):
 
 def main():
     before = open(DB_PATH, encoding="utf-8").read() if os.path.exists(DB_PATH) else ""
-    hashes = load_hashes(DB_PATH)
 
-    auth_key = os.environ.get("MB_AUTH_KEY", "").strip()
-    if auth_key:
-        added = 0
-        for sample in fetch_recent_apks(auth_key):
-            sha = (sample.get("sha256_hash") or "").lower()
-            if SHA256_RE.match(sha) and sha not in hashes:
-                hashes[sha] = threat_name(sample.get("signature"))
-                added += 1
-        print(f"MalwareBazaar: {added} hash(es) novo(s); total {len(hashes)}.")
-    else:
-        print("MB_AUTH_KEY nao configurada: hashes do MalwareBazaar nao atualizados.")
-
-    iocs = stalkerware_lines()
-    if iocs is None:
-        iocs = previous_ioc_lines(DB_PATH)
+    eset = eset_lines()
+    if eset is None:
+        eset = previous(before, "eset")
+    stalkerware = stalkerware_lines()
+    if stalkerware is None:
+        stalkerware = previous(before, "stalkerware")
 
     version = [l for l in before.splitlines() if l.startswith("#version=")]
-    lines = version + HEADER + [f"{sha};{name}" for sha, name in hashes.items()] + iocs
-    content = "\n".join(lines) + "\n"
+    content = "\n".join(version + HEADER + eset + stalkerware) + "\n"
     with open(DB_PATH, "w", encoding="utf-8", newline="\n") as f:
         f.write(content)
 

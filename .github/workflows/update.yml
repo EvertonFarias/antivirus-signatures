@@ -30,9 +30,8 @@ jobs:
           distribution: temurin
           java-version: "21"
 
-      - name: Buscar hashes novos
-        env:
-          MB_AUTH_KEY: ${{ secrets.MB_AUTH_KEY }}
+      # ESET malware-ioc (BSD-2) + Echap stalkerware-indicators (CC BY 4.0)
+      - name: Montar a base com as fontes publicas
         run: python3 scripts/update_db.py
 
       # Assina todo dia, mesmo sem hashes novos (e mesmo se a busca falhar): a data em

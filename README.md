@@ -5,24 +5,27 @@ Hashes SHA-256 de APKs Android maliciosos conhecidos, publicados via GitHub Page
 - `sha256.txt`: uma entrada por linha, `<sha256>;<nome da ameaça>`. A linha `#version=` traz a data/hora UTC da assinatura.
 - `sha256.txt.sig`: assinatura ECDSA P-256 (SHA-256), em Base64, sobre os bytes exatos de `sha256.txt`.
 
-O workflow `.github/workflows/update.yml` roda todo dia: busca hashes novos no
-[MalwareBazaar](https://bazaar.abuse.ch/), assina a base e publica. Ele assina **todo dia**, mesmo
+O workflow `.github/workflows/update.yml` roda todo dia: monta a base com as fontes abaixo,
+assina e publica. Ele assina **todo dia**, mesmo
 sem hashes novos: o app usa a data de `#version=` para avisar quando a base passa de 7 dias
 (sinal de que as atualizações estão sendo bloqueadas).
 
 ## Fontes e créditos
 
-- **MalwareBazaar** (abuse.ch): hashes SHA-256 de APKs maliciosos.
+- **ESET malware-ioc** (https://github.com/eset/malware-ioc), licença BSD-2-Clause,
+  Copyright (c) 2014-2018 ESET spol. s r.o.: SHA-256 das amostras de cada investigação publicada.
 - **Echap stalkerware-indicators** (https://github.com/AssoEchap/stalkerware-indicators), licença
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): nomes de pacote e certificados (SHA-1)
   de apps espiões, convertidos para as linhas `pkg:` e `cert1:`. O app mostra o crédito em
   Ajustes → Fontes de dados de ameaças.
 
+O **MalwareBazaar/abuse.ch não é usado**: pelos termos de uso em vigor desde novembro de 2025,
+o uso comercial exige assinatura paga pela Spamhaus (https://abuse.ch/terms-of-use/).
+
 ## Segredos
 
 - `SIGNING_PRIVATE_KEY`: chave privada, no **Environment `assinatura`** (Settings → Environments),
   liberado só para o branch `main`. Outros branches, forks e PRs não conseguem lê-la.
-- `MB_AUTH_KEY`: chave da API do abuse.ch (opcional; sem ela o workflow só reassina a base).
 
 As Actions estão fixadas por commit (uma tag pode ser movida para código malicioso, um commit não).
 O Dependabot abre PR semanal quando sai versão nova: confira o changelog antes de aceitar.
