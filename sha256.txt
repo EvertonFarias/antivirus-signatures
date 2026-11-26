@@ -1,4 +1,4 @@
-#version=202611251304
+#version=202611261244
 # Base de ameacas do MeowGuard: <sha256>;<nome> | pkg:<pacote>;<nome> | cert1:<sha1>;<nome>
 # Fontes: ESET malware-ioc (BSD-2-Clause, (c) ESET spol. s r.o.); Echap stalkerware-indicators (CC BY 4.0)
 0010ccb822538d1881c61be874af49382c44b6c9cb665081cf0f672cbed5b6a5;ESET.turla
